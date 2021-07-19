@@ -22,7 +22,7 @@ class _TopPageState extends State<TopPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('Firebase × Flutter'), //Title Setting
       ),
       body: Center(
         child: Column(
@@ -42,7 +42,7 @@ class _TopPageState extends State<TopPage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: Icon(Icons.add),
-      ), 
+      ),
     );
   }
 }
