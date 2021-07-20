@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class AddMemoPage extends StatefulWidget {
@@ -8,6 +9,15 @@ class AddMemoPage extends StatefulWidget {
 class _AddMemoPageState extends State<AddMemoPage> {
   TextEditingController titleController = TextEditingController();
   TextEditingController detailController = TextEditingController();
+
+  Future<void> addMemo() async {
+    var collection = FirebaseFirestore.instance.collection('memo');
+    collection.add({
+      'title': titleController.text,
+      'detail': detailController.text,
+      'createdTime': Timestamp.now()
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +73,10 @@ class _AddMemoPageState extends State<AddMemoPage> {
                 //教材と異なる(RaiseButtonは非推奨でありchild及びonPressは必須)
                 child: ElevatedButton(
                   child: Text('追加'),
-                  onPressed: () {},
+                  onPressed: () async {
+                    await addMemo();
+                    Navigator.pop(context);
+                  },
                   style: ElevatedButton.styleFrom(
                       primary: Theme.of(context).primaryColor),
                 ),
