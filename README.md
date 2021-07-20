@@ -1,4 +1,4 @@
-# my_app2
+# flutter_memo_app
 
 A new Flutter project.
 

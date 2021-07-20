@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_app2/pages/top_page.dart';
+import 'package:flutter_memo_app/pages/top_page.dart';
 
 void main() {
   runApp(MyApp());
