@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_memo_app/model/memo.dart';
+import 'package:flutter_memo_app/pages/memo_page.dart';
 
 class TopPage extends StatefulWidget {
   TopPage({Key? key, required this.title}) : super(key: key);
@@ -10,36 +13,47 @@ class TopPage extends StatefulWidget {
 }
 
 class _TopPageState extends State<TopPage> {
-  int _counter = 0;
+  List<Memo> memoList = [];
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
+  Future<void> getMemo() async {
+    var snapshot = await FirebaseFirestore.instance.collection('memo').get();
+    var docs = snapshot.docs;
+    docs.forEach((doc) {
+      memoList
+          .add(Memo(title: doc.data()['title'], detail: doc.data()['detail']));
     });
+
+    setState(() {});
   }
 
   @override
+  void initState() {
+    super.initState();
+    getMemo();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Firebase × Flutter'), //Title Setting
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
+      body: ListView.builder(
+        itemCount: memoList.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(memoList[index].title),
+            onTap: () {
+              // 確認画面へ遷移
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MemoPage(memoList[index])));
+            },
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () {},
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),
