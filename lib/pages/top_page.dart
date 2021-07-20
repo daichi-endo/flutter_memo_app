@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_memo_app/model/memo.dart';
 import 'package:flutter_memo_app/pages/memo_page.dart';
 
 import 'add_memo_page.dart';
@@ -15,23 +14,12 @@ class TopPage extends StatefulWidget {
 }
 
 class _TopPageState extends State<TopPage> {
-  List<Memo> memoList = [];
-
-  Future<void> getMemo() async {
-    var snapshot = await FirebaseFirestore.instance.collection('memo').get();
-    var docs = snapshot.docs;
-    docs.forEach((doc) {
-      memoList
-          .add(Memo(title: doc.data()['title'], detail: doc.data()['detail']));
-    });
-
-    setState(() {});
-  }
+  late CollectionReference memos;
 
   @override
   void initState() {
     super.initState();
-    getMemo();
+    memos = FirebaseFirestore.instance.collection('memo');
   }
 
   Widget build(BuildContext context) {
@@ -39,21 +27,29 @@ class _TopPageState extends State<TopPage> {
       appBar: AppBar(
         title: Text('Firebase × Flutter'), //Title Setting
       ),
-      body: ListView.builder(
-        itemCount: memoList.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(memoList[index].title),
-            onTap: () {
-              // 確認画面へ遷移
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MemoPage(memoList[index])));
-            },
-          );
-        },
-      ),
+      body: StreamBuilder<QuerySnapshot>(
+          stream: memos.snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            }
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(snapshot.data!.docs[index].get('title')),
+                  onTap: () {
+                    // 確認画面へ遷移
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                MemoPage(snapshot.data!.docs[index])));
+                  },
+                );
+              },
+            );
+          }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
