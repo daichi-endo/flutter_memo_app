@@ -20,5 +20,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-//todo アプリのタイトルを変更

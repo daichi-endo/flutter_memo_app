@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_memo_app/model/memo.dart';
 import 'package:flutter_memo_app/pages/memo_page.dart';
 
+import 'add_memo_page.dart';
+
 class TopPage extends StatefulWidget {
   TopPage({Key? key, required this.title}) : super(key: key);
 
@@ -53,7 +55,10 @@ class _TopPageState extends State<TopPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AddMemoPage()));
+        },
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),
