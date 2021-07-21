@@ -16,6 +16,11 @@ class TopPage extends StatefulWidget {
 class _TopPageState extends State<TopPage> {
   late CollectionReference memos;
 
+  Future<void> deleteMemo(String docId) async {
+    var document = FirebaseFirestore.instance.collection('memo').doc(docId);
+    document.delete();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -68,7 +73,11 @@ class _TopPageState extends State<TopPage> {
                                     leading: Icon(Icons.delete,
                                         color: Colors.redAccent),
                                     title: Text('削除'),
-                                    onTap: () {},
+                                    onTap: () async {
+                                      await deleteMemo(
+                                          snapshot.data!.docs[index].id);
+                                      Navigator.pop(context);
+                                    },
                                   )
                                 ],
                               ),
