@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_memo_app/pages/memo_page.dart';
 
-import 'add_memo_page.dart';
+import 'add_edit_memo_page.dart';
 
 class TopPage extends StatefulWidget {
   TopPage({Key? key, required this.title}) : super(key: key);
@@ -54,7 +54,15 @@ class _TopPageState extends State<TopPage> {
                                       color: Colors.blueAccent,
                                     ),
                                     title: Text('編集'),
-                                    onTap: () {},
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AddEditMemoPage(snapshot
+                                                      .data!.docs[index])));
+                                    },
                                   ),
                                   ListTile(
                                     leading: Icon(Icons.delete,
@@ -82,8 +90,8 @@ class _TopPageState extends State<TopPage> {
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => AddMemoPage()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => AddEditMemoPage(null)));
         },
         tooltip: 'Increment',
         child: Icon(Icons.add),
